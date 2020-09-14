@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup as bs
 import time
 import pymongo
 import re
+import datetime
 
 def init_browser():
     executable_path = {"executable_path": "/usr/local/bin/chromedriver"}
@@ -76,8 +77,9 @@ def scrape():
     return_dict["featured_image_url"] = featured_image_url
     return_dict["mars_facts_table_html"] = mars_facts_table_html
     return_dict["hemisphere_list"] = hemisphere_list
+    return_dict["date"] = datetime.datetime.utcnow()
     
-    db.mission_to_mars.insert_one(return_dict)
+    db.mission_to_mars.update({}, return_dict, upsert=True)
     
     browser.quit()
 
